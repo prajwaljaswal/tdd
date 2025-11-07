@@ -1,13 +1,23 @@
 import { useState } from 'react';
 
+import { add } from './stringCalculator';
+
 const instructionsId = 'calculator-instructions';
 const inputId = 'numbers-input';
 
 const App = () => {
   const [input, setInput] = useState('');
-  const [result] = useState<number | null>(null);
+  const [result, setResult] = useState<number | null>(null);
 
-  const handleCalculate = () => {};
+  const handleCalculate = () => {
+    try {
+      const total = add(input);
+      setResult(total);
+    } catch (error) {
+      setResult(null);
+      console.error(error);
+    }
+  };
 
   return (
     <main
