@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import App from './App';
 
@@ -49,6 +49,23 @@ describe('App accessibility', () => {
     fireEvent.click(calculateButton);
 
     expect(screen.getByRole('status')).toHaveTextContent('Result: 6');
+  });
+
+  it('handles invalid input gracefully without announcing a result', () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    render(<App />);
+
+    const [textarea] = screen.getAllByRole('textbox', { name: /numbers to add/i });
+    fireEvent.change(textarea, { target: { value: '4,hello' } });
+
+    const [calculateButton] = screen.getAllByRole('button', { name: /calculate/i });
+    fireEvent.click(calculateButton);
+
+    expect(screen.queryByRole('status')).not.toBeInTheDocument();
+    expect(errorSpy).toHaveBeenCalled();
+
+    errorSpy.mockRestore();
   });
 });
 

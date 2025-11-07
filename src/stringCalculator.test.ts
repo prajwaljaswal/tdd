@@ -18,5 +18,17 @@ describe('string calculator add', () => {
   it('handles newline delimiters in addition to commas', () => {
     expect(add('4\n5,6')).toBe(15);
   });
+
+  it('trims whitespace around numbers', () => {
+    expect(add(' 8 , 9 ')).toBe(17);
+  });
+
+  it('treats trailing delimiters as zero values', () => {
+    expect(add('10,2,')).toBe(12);
+  });
+
+  it('throws when a token is not a number', () => {
+    expect(() => add('3,NaN')).toThrow('Invalid number: NaN');
+  });
 });
 
